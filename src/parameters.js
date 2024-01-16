@@ -10,24 +10,22 @@ export default {
 		L:100,
 		agentsize: 1.0,
 	
-		speed: {
-			range:[0,1],
-			default:0.2
+		response_magnitude: {
+			range:[0,0.3],
+			default:0.1
 		},
-		wiggle: {
-			range:[0,180],
-			default:50
+		lateral_interaction: {
+			range:[0.5,20],
+			default:6
 		},
-		interaction_radius:{
-			range : [0,5],
-			default : 3
+		input_space : {
+			choices:["circle","triangle","square","cross"],
+		default:0
 		},
-		number_of_particles : {
-			choices:[50,100,200,400],
-		default:2
-		},
-		color_by_heading: {
-			default: true
+		geometry : {
+			choices:["256 x 1","64 x 4","16 x 16"],
+			dimensions:[{nx:256,ny:1},{nx:64,ny:4},{nx:16,ny:16}],
+			default:2
 		}
 }
 

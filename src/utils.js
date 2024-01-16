@@ -22,4 +22,24 @@ const dist = (a,b) => {
 	return Math.sqrt(dx*dx + dy*dy);
 }
 
-export {toArray,add_id_label,add_widget,get_variables,get_booleans,get_choices,deg2rad,rad2deg,dist}
+const inside = (point, vs) => {
+ 
+    const x = point.x, y = point.y;
+    let inside = false;
+	
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i].x, yi = vs[i].y;
+        var xj = vs[j].x, yj = vs[j].y;
+
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
+};
+
+
+
+
+export {inside,toArray,add_id_label,add_widget,get_variables,get_booleans,get_choices,deg2rad,rad2deg,dist}

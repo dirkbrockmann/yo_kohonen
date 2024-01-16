@@ -1,3 +1,17 @@
-.node {
-	
+.neuron {
+	fill: white;
+	stroke: black;
+	stroke-width:0.5px;
+}
+
+.synapse{
+	fill:none;
+	stroke: black;
+	stroke-width:.5px;
+}
+
+.boundary{
+	stroke:darkred;
+	stroke-width:2px;
+	fill:none;
 }

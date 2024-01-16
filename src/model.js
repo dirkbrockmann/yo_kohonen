@@ -3,16 +3,15 @@
 // of visualization which are done in viz.js
 
 import param from "./parameters.js"
-import {each,range,map,mean} from "lodash-es"
-import {rad2deg,deg2rad} from "./utils"
+import {each,range,map,mean,min} from "lodash-es"
+import {dist,inside} from "./utils"
+import network from "./lattice.js"
+import space from "./inputspace.js"
 
-const L = param.L;
-const dt = param.dt;
 
-// typically objects needed for the explorable
-// are defined here
-
-var agents = [];
+var nodes = [];
+var links = [];
+var stim = {};
 
 // the initialization function, this is bundled in simulation.js with the initialization of
 // the visualization and effectively executed in index.js when the whole explorable is loaded
@@ -23,16 +22,17 @@ const initialize = () => {
 	param.timer={}; param.tick=0;
 
 	// make agents
-
-	const N = param.number_of_particles.choices[param.number_of_particles.widget.value()];
+	const dim = param.geometry.dimensions[param.geometry.widget.value()];
+	nodes = network(dim.nx,dim.ny)
+	links = []
 	
-	agents = map(range(N), i => { return {
-				index:i, 
-				x:L*Math.random(), 
-				y:L*Math.random(),
-				theta: 2*Math.PI*Math.random(),
-			} 
-	});
+	nodes.forEach(function(d){
+		d.x=2*Math.random()-1;
+		d.y=2*Math.random()-1;
+		d.neighbors.forEach(function(n){
+			links.push({source:d,target:n})
+		})
+	})
 	
 };
 
@@ -43,33 +43,30 @@ const initialize = () => {
 const go  = () => {
 	
 	param.tick++;
+	stim = {x:2*Math.random()-1,y:2*Math.random()-1};
+	const boundary = space[param.input_space.choices[param.input_space.widget.value()]];
+	const step = param.response_magnitude.widget.value();
+	const sigma = param.lateral_interaction.widget.value();
 	
-	each(agents,a=>{
+	if (inside(stim,boundary)){
 		
-		var dx = dt*param.speed.widget.value()*Math.cos(a.theta);
-		var dy = dt*param.speed.widget.value()*Math.sin(a.theta);
+		each(nodes,n => n.state="clear")	
+
+		let d = nodes.map(n=>dist(n,stim));
+		let winner = nodes[d.indexOf(min(d))];
+	 	winner.state = "winner";
+
+		each(nodes,n=>{
+			const L = step*Math.exp(-((n.n-winner.n)*(n.n-winner.n)+
+			(n.m-winner.m)*(n.m-winner.m))/(sigma**2));
 		
-		const x_new = a.x + dx;
-		const y_new = a.y + dy;
-		
-		if (x_new < 0) {dx+=L};
-		if (y_new < 0) {dy+=L};
-		if (x_new > L) {dx-=L};
-		if (y_new > L) {dy-=L};  
-		
-		a.x += dx;
-		a.y += dy;
-		
-		var neighbors = agents.filter(d =>  (d.x-a.x)**2 + (d.y-a.y)**2 <= param.interaction_radius.widget.value()**2 )
-		
-		var mx = mean(map(neighbors,x=> Math.cos(deg2rad(x.theta))));
-		var my = mean(map(neighbors,x=> Math.sin(deg2rad(x.theta))));	
-		
-		a.theta = rad2deg(Math.atan2(my,mx))
-		
-		a.theta += deg2rad(param.wiggle.widget.value())*(Math.random()-0.5)
-		
-	})
+			let norm = dist(stim,n);
+			var dx = (stim.x-n.x)/norm;
+			var dy = (stim.y-n.y)/norm;
+			n.x+=L*dx;
+			n.y+=L*dy;
+		})			
+	}
 	
 }
 
@@ -79,10 +76,9 @@ const go  = () => {
 
 const update = () => {
 	
-	each(agents,x => {x.active = x.index < param.number_of_particles.widget.value() ? true : false})
 
 }
 
 // the three functions initialize, go and update are exported, also all variables
 // that are required for the visualization
-export {agents,initialize,go,update}
+export {stim,nodes,links,initialize,go,update}

@@ -8,20 +8,34 @@ export default {
 		slider_size: 400,
 		slider_show: true,
 		slider_gap : 1.5,
-		slider_anchor: {x:1,y:8},
-		toggle_anchor: {x:7,y:4},
-		toggle_label_pos:"right",
+		slider_anchor: {x:1,y:9},
+		slider_girth:12,
+		slider_knob:14,
 		playbutton_size: 120,
 		playbutton_anchor:{x:3,y:2},
 		backbutton_anchor:{x:4,y:5},
 		resetbutton_anchor:{x:2,y:5},
-		radio_anchor:{x:7,y:2},
-		radio_size:150,
-		radio_orientation:"horizontal",
-		radio_label_position:"top",
-		radio_shape:"rect",
+		radio:{
+			input_space:{
+				anchor:{x:9,y:1},
+				size:150,
+				orientation:"vertical",
+				label_position:"right",
+				shape:"circle",
+				buttonsize:30,
+			},
+			geometry:{
+				anchor:{x:1.5,y:7},
+				size:300,
+				orientation:"horizontal",
+				label_position:"right",
+				shape:"rect",
+				buttonsize:30,
+			}			
+		}
 	},
 	simulation: {
-		delay:0
+		delay:0,
+		neuron_size:5,
 	}
 }

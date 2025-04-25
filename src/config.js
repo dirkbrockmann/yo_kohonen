@@ -35,7 +35,7 @@ export default {
 		}
 	},
 	simulation: {
-		delay:0,
+		delay:10,
 		neuron_size:5,
 	}
 }

@@ -4,7 +4,7 @@
   "subtitle": "Kohonen's Self-Organizing Map",
   "description": "This explorable illustrates the dynamics of a simple neural network model that is able to self-organize a one- or two-dimensional representation of a complicate input space.",
   "author": "Dirk Brockmann (https://synosy.github.io)",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "license": "CC-BY-4.0",
   "repository": {
     "type": "git",
